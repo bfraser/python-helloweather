@@ -22,7 +22,9 @@ def helloweather():
 
     lat, lon = geoip_params['loc'].split(',')
     print lon, lat
-    weatherurl = "http://forecast.weather.gov/MapClick.php?lat=%s&lon=%s&FcstType=json" % (lat, lon)
+    baseurl = "https://query.yahooapis.com/v1/public/yql?"
+    yql_query = 'select * from weather.forecast where woeid in (select woeid from geo.placefinder where text="%s,%s" and gflags="R")' % (lat, lon)
+    weatherurl = baseurl + urllib.urlencode({'q': yql_query}) + "&format=json"
     weatherdata = urllib2.urlopen(weatherurl)
     dictweatherdata = ''
     try:
